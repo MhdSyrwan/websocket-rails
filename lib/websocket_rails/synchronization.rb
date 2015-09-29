@@ -44,7 +44,8 @@ module WebsocketRails
     include Logging
 
     def redis
-      @redis ||= begin
+      return @redis if @redis && @redis.connected?
+      begin
         redis_options = WebsocketRails.config.redis_options
         EM.reactor_running? ? Redis.new(redis_options) : ruby_redis
       end
